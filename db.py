@@ -18,6 +18,7 @@ def get_connection():
     try:
         conn = mysql.connector.connect(
             host="localhost",
+            port=3306,
             user="root",          # default XAMPP
             password="",          # kalau pakai password, ganti di sini
             database="siak"
