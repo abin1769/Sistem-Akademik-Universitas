@@ -477,7 +477,7 @@ class SistemAkademik:
             print(f"\n=== MENU DOSEN ({dosen.nama}) ===")
             print("1. Lihat profil")
             print("2. Lihat mata kuliah diampu")
-            print("3. Buka presensi")
+            print("3. Buat presensi")
             print("4. Lihat daftar presensi")
             print("5. Input nilai mahasiswa")
             print("0. Logout")
