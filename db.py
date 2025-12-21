@@ -134,7 +134,7 @@ def update_mata_kuliah(conn, mk, kode_lama):
         cursor.close()
 
 
-# (Opsional) hapus MK
+#hapus MK
 def hapus_mata_kuliah(conn, kode_mk):
     """
     Menghapus mata kuliah dari tabel mata_kuliah berdasarkan kode_mk.
