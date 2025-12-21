@@ -10,6 +10,10 @@ if __name__ == "__main__":
     while True:
         sistem.login()
         lagi = input("\nIngin login lagi? (y/n): ").lower()
-        if lagi != 'y':
+        if lagi == 'n':
             print("Keluar dari sistem.")
             break
+        elif lagi != 'y':
+            print("Input tidak valid. Keluar dari sistem.")
+            break
+            
