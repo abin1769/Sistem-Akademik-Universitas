@@ -40,7 +40,7 @@ Mahasiswa login menggunakan **NIM** (9 digit angka) dan **password**.
 
 | NIM | Password | Nama | Program Studi | Angkatan |
 |-----|----------|------|--------------|----------|
-| 123456789 | mahasiswa1 | Andi Wijaya | Teknik Informatika | 2022 |
+| 230000001 | mhs123450 | Andi Wijaya | Teknik Informatika | 2022 |
 | 987654321 | mahasiswa2 | Siti Rahayu | Teknik Informatika | 2022 |
 | 456789123 | mahasiswa3 | Rudi Hermawan | Sistem Informasi | 2023 |
 | 789123456 | mahasiswa4 | Dewi Lestari | Teknik Komputer | 2023 |

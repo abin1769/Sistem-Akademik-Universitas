@@ -3,7 +3,7 @@
 # ============================
 
 class User:
-    def __init__(self, id, nama, email, password):
+    def __init__(self, id, nama, email, password): #Menginisialisasi
         self.id = id
         self.nama = nama
         self.email = email
