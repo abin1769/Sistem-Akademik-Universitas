@@ -2,10 +2,17 @@
 # SISTEM AKADEMIK (PENGELOLA)
 # ============================
 
-from user import Admin, Mahasiswa, Dosen, Login
-from akademik import MataKuliah, KRS, Presensi, Nilai
-from db import get_connection, simpan_krs, simpan_nilai, simpan_mata_kuliah, update_mata_kuliah
+from user.admin import Admin
+from user.mahasiswa import Mahasiswa
+from user.dosen import Dosen
+from user.login import Login
 
+from akademik.matakuliah import MataKuliah
+from akademik.krs import KRS
+from akademik.presensi import Presensi
+from akademik.nilai import Nilai
+
+from db import get_connection, simpan_krs, simpan_nilai, simpan_mata_kuliah, update_mata_kuliah
 
 class SistemAkademik:
     def __init__(self):
@@ -494,21 +501,38 @@ class SistemAkademik:
                     if mk.dosen == dosen:
                         print("-", mk.info())
 
+
             elif pilih == "3":
                 mk_dosen = [mk for mk in self.daftar_mk if mk.dosen == dosen]
                 if not mk_dosen:
                     print("Anda belum mengampu mata kuliah.")
                     continue
+
                 print("\nPilih mata kuliah untuk presensi:")
                 for i, mk in enumerate(mk_dosen, start=1):
                     print(f"{i}. {mk.info()}")
-                idx = int(input("Pilih: ")) - 1
-                mk_pilih = mk_dosen[idx]
-                tanggal = input("Tanggal presensi (dd-mm-yyyy): ")
+
+                try:
+                    idx = int(input("Pilih: ")) - 1
+                    mk_pilih = mk_dosen[idx]
+                except (ValueError, IndexError):
+                    print("Pilihan tidak valid.")
+                    continue
+
+                from datetime import datetime
+                while True:
+                    tanggal = input("Tanggal presensi (dd-mm-yyyy): ")
+                    try:
+                        datetime.strptime(tanggal, "%d-%m-%Y")
+                        break
+                    except ValueError:
+                        print("Format tanggal salah! Gunakan dd-mm-yyyy.")
+
                 pres = Presensi(self.next_id_presensi, mk_pilih, dosen, tanggal)
                 self.next_id_presensi += 1
                 self.daftar_presensi.append(pres)
                 print("Presensi berhasil dibuka.")
+
 
             elif pilih == "4":
                 pres_list = self.presensi_by_dosen(dosen)

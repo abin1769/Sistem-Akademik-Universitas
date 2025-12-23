@@ -1,33 +1,12 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 20 Des 2025 pada 16.06
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- SQL Dump for SIAK Database
+-- Simplified version for better compatibility
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Create database if not exists
+CREATE DATABASE IF NOT EXISTS `siak`;
+USE `siak`;
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `siak`
---
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `admin`
---
-
-CREATE TABLE `admin` (
+-- Table structure for `admin`
+CREATE TABLE IF NOT EXISTS `admin` (
   `id_admin` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `username` varchar(100) NOT NULL
