@@ -2,7 +2,7 @@
 # MAIN PROGRAM
 # ============================
 
-from siak import SistemAkademik
+from app import SistemAkademik
 
 if __name__ == "__main__":
     sistem = SistemAkademik()

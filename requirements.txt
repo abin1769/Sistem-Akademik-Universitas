@@ -1,0 +1,29 @@
+# Sistem Akademik - Project Dependencies
+# Python 3.12+
+
+# No external dependencies required for core application
+# Using only Python standard library:
+# - unittest (testing)
+# - logging (logging & error handling)
+# - MySQLdb (database connection - should be installed separately)
+
+# Optional dependencies for development:
+# - pytest (if you prefer pytest over unittest)
+# - coverage (for test coverage analysis)
+# - black (code formatting)
+# - pylint (code linting)
+
+# Installation:
+# For database support, install:
+# pip install mysql-connector-python
+# OR
+# pip install PyMySQL
+# OR
+# pip install mysqlclient
+
+# For development tools (optional):
+# pip install pytest coverage black pylint
+
+# Tested versions:
+# Python: 3.12.0
+# MySQL: 8.0.35 (via XAMPP)
