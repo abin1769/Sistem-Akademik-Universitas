@@ -5,7 +5,7 @@ Menampilkan menu operasi: Presensi dan Nilai.
 """
 
 from datetime import datetime
-from infrastructure.database.helpers import simpan_nilai
+from infrastructure.repositories import NilaiRepository
 from domain.entities.presensi import Presensi
 from domain.entities.nilai import Nilai
 from presentation.ui.menu_ui_helper import MenuDisplay, MenuInputValidator, MenuUI
@@ -28,6 +28,7 @@ class DosenMenu:
         self.conn = conn
         self.dosen_service = DosenService(state)
         self.grading_strategy = GradingFactory.create_strategy('standard')
+        self.nilai_repo = NilaiRepository(conn) if conn else None
 
     def run(self, dosen):
         """
@@ -242,8 +243,9 @@ class DosenMenu:
                 dosen, m_pilih, mk_pilih, nilai_angka
             )
             
-            # Simpan ke database
-            simpan_nilai(self.conn, nilai_obj)
+            # Simpan/update ke database (via repository)
+            if self.nilai_repo:
+                self.nilai_repo.simpan(nilai_obj)
             
             MenuDisplay.success(f"Nilai berhasil disimpan: {nilai_obj.info()}")
         except DosenServiceError as e:

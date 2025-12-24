@@ -21,23 +21,39 @@ class NilaiRepository(BaseRepository):
         """
         try:
             cursor = self.conn.cursor()
-            
-            query = """
-                INSERT INTO nilai (id_dosen, id_mk, id_mahasiswa, nilai_angka)
-                VALUES (%s, %s, %s, %s)
+
+            # Coba update dulu (jika sudah ada record mahasiswa+mk)
+            update_query = """
+                UPDATE nilai
+                SET nilai_angka = %s, nilai_huruf = %s
+                WHERE id_mahasiswa = %s AND id_mk = %s
             """
-            cursor.execute(query, (
-                nilai_obj.dosen.id,
-                nilai_obj.mata_kuliah.id_mk,
+            cursor.execute(update_query, (
+                nilai_obj.nilai_angka,
+                nilai_obj.nilai_huruf,
                 nilai_obj.mahasiswa.id,
-                nilai_obj.nilai_angka
+                nilai_obj.mata_kuliah.id_mk,
             ))
-            
+
+            if cursor.rowcount == 0:
+                insert_query = """
+                    INSERT INTO nilai (id_mahasiswa, id_mk, nilai_angka, nilai_huruf)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (
+                    nilai_obj.mahasiswa.id,
+                    nilai_obj.mata_kuliah.id_mk,
+                    nilai_obj.nilai_angka,
+                    nilai_obj.nilai_huruf,
+                ))
+                self.commit()
+                return cursor.lastrowid
+
             self.commit()
-            return cursor.lastrowid
+            return None
         except Exception as e:
             self.rollback()
-            raise RepositoryError(f"Gagal simpan Nilai: {str(e)}")
+            raise RepositoryError(f"Gagal simpan/update Nilai: {str(e)}")
     
     def cari_by_id(self, nilai_id):
         """Cari Nilai berdasarkan ID"""
@@ -79,11 +95,12 @@ class NilaiRepository(BaseRepository):
             cursor = self.conn.cursor()
             query = """
                 UPDATE nilai 
-                SET nilai_angka = %s
+                SET nilai_angka = %s, nilai_huruf = %s
                 WHERE id_mahasiswa = %s AND id_mk = %s
             """
             cursor.execute(query, (
                 nilai_obj.nilai_angka,
+                nilai_obj.nilai_huruf,
                 nilai_obj.mahasiswa.id,
                 nilai_obj.mata_kuliah.id_mk
             ))

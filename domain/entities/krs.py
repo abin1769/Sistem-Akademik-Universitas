@@ -1,5 +1,6 @@
 class KRS:
-    def __init__(self, mahasiswa, semester, tahun_ajaran):
+    def __init__(self, mahasiswa, semester, tahun_ajaran, id_krs=None):
+        self.id_krs = id_krs
         self.mahasiswa = mahasiswa    # objek Mahasiswa
         self.semester = semester
         self.tahun_ajaran = tahun_ajaran

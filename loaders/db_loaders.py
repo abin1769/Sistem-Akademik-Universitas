@@ -79,7 +79,7 @@ class DBLoader:
         state.mk_by_id = {}
         for id_mk, kode_mk, nama_mk, sks, id_dosen in rows:
             dosen_obj = state.dosen_by_id.get(id_dosen)
-            mk = MataKuliah(kode_mk, nama_mk, sks, dosen_obj)
+            mk = MataKuliah(kode_mk, nama_mk, sks, dosen_obj, id_mk=id_mk)
             state.daftar_mk.append(mk)
             state.mk_by_id[id_mk] = mk
 
@@ -94,7 +94,7 @@ class DBLoader:
             mhs_obj = state.mahasiswa_by_id.get(id_mahasiswa)
             if not mhs_obj:
                 continue
-            krs_obj = KRS(mhs_obj, semester, tahun_ajaran)
+            krs_obj = KRS(mhs_obj, semester, tahun_ajaran, id_krs=id_krs)
             state.daftar_krs.append(krs_obj)
             state.krs_by_id[id_krs] = krs_obj
 
@@ -120,6 +120,6 @@ class DBLoader:
             mk_obj = state.mk_by_id.get(id_mk)
             if not mhs_obj or not mk_obj:
                 continue
-            nilai_obj = Nilai(mhs_obj, mk_obj, float(nilai_angka))
-            nilai_obj.nilai_huruf = nilai_huruf
+            dosen_obj = getattr(mk_obj, "dosen", None)
+            nilai_obj = Nilai(dosen_obj, mk_obj, mhs_obj, float(nilai_angka), nilai_huruf=nilai_huruf)
             state.daftar_nilai.append(nilai_obj)

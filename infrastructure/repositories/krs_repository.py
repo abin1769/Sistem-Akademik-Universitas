@@ -30,8 +30,8 @@ class KRSRepository(BaseRepository):
             """
             cursor.execute(query, (
                 krs_obj.mahasiswa.id,
-                1,  # Semester (default 1)
-                '2025/2026'  # Tahun ajaran
+                krs_obj.semester,
+                krs_obj.tahun_ajaran,
             ))
             
             krs_id = cursor.lastrowid
@@ -45,10 +45,29 @@ class KRSRepository(BaseRepository):
                 cursor.execute(detail_query, (krs_id, mk.id_mk))
             
             self.commit()
+            krs_obj.id_krs = krs_id
             return krs_id
         except Exception as e:
             self.rollback()
             raise RepositoryError(f"Gagal simpan KRS: {str(e)}")
+
+    def tambah_detail(self, krs_obj, daftar_mk):
+        """Tambah mata kuliah ke KRS yang sudah ada (insert ke krs_detail)."""
+        if not getattr(krs_obj, "id_krs", None):
+            raise RepositoryError("KRS belum punya id_krs; gunakan simpan() untuk membuat header")
+
+        try:
+            cursor = self.conn.cursor()
+            for mk in daftar_mk:
+                detail_query = """
+                    INSERT INTO krs_detail (id_krs, id_mk)
+                    VALUES (%s, %s)
+                """
+                cursor.execute(detail_query, (krs_obj.id_krs, mk.id_mk))
+            self.commit()
+        except Exception as e:
+            self.rollback()
+            raise RepositoryError(f"Gagal tambah detail KRS: {str(e)}")
     
     def cari_by_id(self, krs_id):
         """Cari KRS berdasarkan ID"""

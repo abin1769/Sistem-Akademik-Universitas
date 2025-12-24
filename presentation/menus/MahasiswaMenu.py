@@ -4,7 +4,7 @@ Menu untuk mahasiswa.
 Menampilkan menu operasi: KRS, Presensi, Nilai.
 """
 
-from infrastructure.database.helpers import simpan_krs
+from infrastructure.repositories import KRSRepository
 from presentation.ui.menu_ui_helper import MenuDisplay, MenuInputValidator, MenuUI
 from domain.services.mahasiswa_service import MahasiswaService, MahasiswaServiceError
 
@@ -23,6 +23,7 @@ class MahasiswaMenu:
         self.service = service
         self.conn = conn
         self.mahasiswa_service = MahasiswaService(state)
+        self.krs_repo = KRSRepository(conn) if conn else None
 
     def run(self, mhs):
         """
@@ -144,8 +145,15 @@ class MahasiswaMenu:
                 try:
                     for mk in temp_pilihan:
                         krs.tambah_mk(mk)
-                    # Simpan ke database
-                    simpan_krs(self.conn, krs, temp_pilihan)
+
+                    # Simpan ke database (via repository)
+                    if self.krs_repo:
+                        if getattr(krs, 'id_krs', None):
+                            self.krs_repo.tambah_detail(krs, temp_pilihan)
+                        else:
+                            new_krs_id = self.krs_repo.simpan(krs)
+                            if hasattr(self.state, 'krs_by_id'):
+                                self.state.krs_by_id[new_krs_id] = krs
                     MenuDisplay.success("Mata kuliah berhasil disimpan ke KRS")
                 except Exception as e:
                     MenuDisplay.error(f"Gagal menyimpan KRS: {str(e)}")

@@ -4,7 +4,7 @@ Menu untuk admin.
 Menampilkan menu operasi: Manajemen Mata Kuliah dan Statistik.
 """
 
-from infrastructure.database.helpers import simpan_mata_kuliah, update_mata_kuliah
+from infrastructure.repositories import MataKuliahRepository
 from presentation.ui.menu_ui_helper import MenuDisplay, MenuInputValidator, MenuUI
 from domain.services.admin_service import AdminService, AdminServiceError
 
@@ -23,6 +23,7 @@ class AdminMenu:
         self.service = service
         self.conn = conn
         self.admin_service = AdminService(state)
+        self.mk_repo = MataKuliahRepository(conn) if conn else None
 
     def run(self, admin):
         """
@@ -133,8 +134,11 @@ class AdminMenu:
             )
             mk_baru.dosen = dosen
             
-            # Simpan ke database
-            simpan_mata_kuliah(self.conn, mk_baru)
+            # Simpan ke database (via repository)
+            if self.mk_repo:
+                new_id = self.mk_repo.simpan(mk_baru)
+                if hasattr(self.state, 'mk_by_id'):
+                    self.state.mk_by_id[new_id] = mk_baru
             
             MenuDisplay.success("Mata kuliah berhasil ditambahkan")
         except AdminServiceError as e:
@@ -200,9 +204,16 @@ class AdminMenu:
                 sks=sks_baru,
                 deskripsi=None
             )
+
+            # Jika kode diganti, validasi unik lalu update in-memory
+            if kode_baru and kode_baru != kode_lama:
+                if self.admin_service.cari_mata_kuliah_by_kode(kode_baru):
+                    raise AdminServiceError(f"Kode mata kuliah {kode_baru} sudah ada")
+                mk_updated.kode_mk = kode_baru
             
-            # Simpan ke database
-            update_mata_kuliah(self.conn, mk_updated, kode_lama)
+            # Simpan ke database (via repository)
+            if self.mk_repo:
+                self.mk_repo.update(mk_updated, kode_lama=kode_lama)
             
             MenuDisplay.success("Mata kuliah berhasil diedit")
         except AdminServiceError as e:
