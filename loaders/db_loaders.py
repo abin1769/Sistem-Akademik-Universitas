@@ -1,10 +1,10 @@
 # loaders/db_loader.py
-from user.admin import Admin
-from user.mahasiswa import Mahasiswa
-from user.dosen import Dosen
-from akademik.matakuliah import MataKuliah
-from akademik.krs import KRS
-from akademik.nilai import Nilai
+from application.dto.admin import Admin
+from application.dto.mahasiswa import Mahasiswa
+from application.dto.dosen import Dosen
+from domain.entities.matakuliah import MataKuliah
+from domain.entities.krs import KRS
+from domain.entities.nilai import Nilai
 
 class DBLoader:
     def __init__(self, conn):

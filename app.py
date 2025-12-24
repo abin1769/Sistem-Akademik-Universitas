@@ -4,14 +4,14 @@ Main application orchestrator.
 Menangani initialization, dependency injection, dan routing ke menu.
 """
 
-from db import get_connection
-from user.login import Login
+from infrastructure.database.connection import get_connection
+from application.use_cases.login import Login
 from loaders.db_loaders import DBLoader
-from services.akademik_services import AkademikService
-from services.mahasiswa_service import MahasiswaService
-from menus.AdminMenu import AdminMenu
-from menus.MahasiswaMenu import MahasiswaMenu
-from menus.DosenMenu import DosenMenu
+from domain.services.akademik_services import AkademikService
+from domain.services.mahasiswa_service import MahasiswaService
+from presentation.menus.AdminMenu import AdminMenu
+from presentation.menus.MahasiswaMenu import MahasiswaMenu
+from presentation.menus.DosenMenu import DosenMenu
 
 
 class AppState:
